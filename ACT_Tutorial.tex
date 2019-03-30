@@ -1,24 +1,108 @@
 \documentclass{report}
-\title{Tutorial on Applied Category Theory}
+\usepackage{amsmath, amsthm,amssymb, mathtools}
+\usepackage{enumitem}
+\usepackage{tikz-cd}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\author{Birzhan Moldagaliyev}
+\title{Applied Category Theory Tutorial (Draft)}
 \begin{document}
 \maketitle
-\chapter{Lesson 1}
+\chapter{Introduction}
+This set of notes serves as a tutorial for those who wish to learn some Applied Category Theory. I am no expert in Applied Category Theory, and the whole point of writing this tutorial is to solidify my knowledge of the field. Since Applied Category Theory uses machinery of Category Theory, we need to learn some of the fundamental concepts from Category Theory. However, one should realize how vast Category Theory is, so it might take a long time to master all concepts from Category Theory. For  this reason, I adopted a rule of introducing applications of Category Theory as early as possible, even though there is a risk that the given applications might be too simple. As for latter thing, I would like to remind myself and the readers that no infant starts running straight out of the cradle, so working on easier examples first should not be seen as a waste of time, but as an investment of time. With this being said, dear friends, let us begin our journey to the land of Applied Category Theory.  
+
+\chapter{Lesson 1: Introduction to Category Theory}
 \textbf{Questions}\\
 \begin{enumerate}
-	\item Why Applied Category Theory?
+	\item What are the origins of Category Theory?
 	\item What is a category?
-	\item How do categories arise?
+	\item What is a functor?
 \end{enumerate}
-\section*{Why Applied Category Theory?}
-A study of applied category theory provides seemingly contradictory experiences. It lets own to work with quite abstract objects, as well as it has a promising potential to shed some light on workings of various systems around us. The latter is also known as compositionality, or when an object is much more than sum of its parts.
+
+
+\section*{What are the origins of Category Theory?}
+Category Theory was born in 1940s when two mathematicians, Eilenberg and Mac Lane, working in quite different areas of mathematics found a common pattern or theme in their works. Thus, they invented a language of category theory, where morphisms between objects play a major role. Since then there is an ongoing process of using Category Theory to discover connections from seemingly distinct areas of mathematics. This has become so common that mathematician invented the term of \emph{categorification} to describe the process of translating some mathematical phenomena into the language of category theory. 
 
 \section*{What is a category?}
-Category can be thought as a class. For example it is common for people to say
-\begin{enumerate}
-	\item Let us consider $Top$, the category of topological spaces.
-	\item Look at $Vect$, a category of vector spaces over some field.
-\end{enumerate}
+A category is a collection of objects, and morphisms which satisfy certain properties.
+\begin{definition}[Category]
+	A category $\mathcal{C}$ consists of
+	\begin{enumerate}
+		\item Objects, denoted as $Ob(\mathcal{C})$.
+		\item Morphisms. For every $c_1,c_2\in Ob(\mathcal{C})$, there is a corresponding collection of morphisms denoted $Hom_{\mathcal{C}}(c_1,c_2)$ or $\mathcal{C}(c_1,c_2)$. 
+		\item Identity morphisms. For every object $c\in Ob(\mathcal{C})$, there is a specific morphism $id_c\in \mathcal{C}(c,c)$.
+		\item Composition of morphisms. There is composition map $\circ$, such that for every triple of objects $c_1,c_2,c_3$
+		\[
+		\circ: \mathcal{C}(c_1,c_2)\times \mathcal{C}(c_2,c_3) \to \mathcal{C}(c_1,c_3)
+		\]
+	\end{enumerate}
+	satisfying the following properties
+	\begin{enumerate}[label=(\alph*)]
+		\item Identity morphisms. For every $f\in \mathcal{C}(c_1,c_2)$
+		\[
+		id_{c_2}\circ f = f = f\circ id_{c_1}
+		\]
+		\item Associativity of composition. For every triple of morphism $f\in \mathcal{C}(c_1,c_2), g\in\mathcal{C}(c_2,c_3)$ and $h\in\mathcal{C}(c_3,c_4)$
+		\[
+		h\circ (g\circ f) = (h\circ g)\circ f
+		\]
+	\end{enumerate}
+	Often composition of two morphisms is written as $gf$, instead of $g\circ f$, where we go through $f$ first, followed by $g$. 
+\end{definition}
 
-\section*{How do categories arise?}
-Historically, category theory arose as an observation that seemingly unrelated mathematical objects could exhibit a common theme.
+\subsection*{Examples and intuitions behind categories}
+There are many examples of categories in mathematics as 
+\begin{itemize}
+	\item $Set$, a category of sets with functions as morphisms.
+	\item $Vect$, a category of vector spaces with linear maps as morphisms.
+	\item $Top$, a category of topological spaces with continuous maps as morphisms.
+\end{itemize}
+As one can see, in all of above examples, objects of categories are sets with morphisms as certain kind of functions. However, there are many examples of categories where a morphisms are not excplicit functions. For example, given any graph, nodes of the graph can thought as objects, while paths between nodes can be thought as morphisms. 
+
+\subsection*{Intuition behind the given categories}
+As a rule of thumb, one could use the following intuition for formation of categories. 
+\begin{itemize}
+	\item $Ob(\mathcal{C})$: (elements, structure, properties). 
+	\item $Hom$: Morphisms maps elements of one objects into elements of another object. Morphisms preserve structure, while some properties might disappear along the way. 
+\end{itemize}
+
+\section*{What is a functor?}
+Functors allow us to travel from category to another. 
+\begin{definition}[Functor]
+	Given two categories $\mathcal{C}, \mathcal{D}$, a functor $F:\mathcal{C}\to\mathcal{D}$ is 
+	\begin{enumerate}
+		\item a mapping between objects, $F:Ob(\mathcal{C})\to Ob(\mathcal{D})$.
+		\item a mapping between morphims, i.e. for all objects $X,Y\in Ob(\mathcal{C})$
+		\[
+		F: \mathcal{C}(X,Y) \to \mathcal{D}(FX,FY)
+		\]
+	\end{enumerate}	
+	such that 
+	\begin{enumerate}[label=(\alph*)]
+		\item $F(id_X) = id_{FX}$, $F$ preserves identities.
+		\item $Fg \circ Ff = F(g\circ f)$, $F$ preserves compositions.
+	\end{enumerate}
+\end{definition}
+
+\subsection*{Examples of Functors}
+\begin{center}
+	\begin{tabular}{|l|l|}
+		\hline
+		Usual map & Functor based interpretation\\
+		\hline
+		monotone map & functor between preorder categories\\
+		monoid homomorphism & functor between monoids\\
+		database instance & functor from database schema to $Set$\\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{thebibliography}{9}
+
+\bibitem{Landry05}
+Elaine Landry and Jean-Pierre Marquis,
+\textit{Categories in Context: Historical, Foundational, and Philosophical},
+Philosophia Mathematica, Volume 13, Issue 1, February 2005, Pages 1–43.
+\end{thebibliography}
 \end{document}
