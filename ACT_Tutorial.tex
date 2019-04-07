@@ -8,10 +8,10 @@
 \title{Applied Category Theory Tutorial (Draft)}
 \begin{document}
 \maketitle
-\chapter{Introduction}
+\chapter*{Introduction}
 This set of notes serves as a tutorial for those who wish to learn some Applied Category Theory. I am no expert in Applied Category Theory, and the whole point of writing this tutorial is to solidify my knowledge of the field. Since Applied Category Theory uses machinery of Category Theory, we need to learn some of the fundamental concepts from Category Theory. However, one should realize how vast Category Theory is, so it might take a long time to master all concepts from Category Theory. For  this reason, I adopted a rule of introducing applications of Category Theory as early as possible, even though there is a risk that the given applications might be too simple. As for latter thing, I would like to remind myself and the readers that no infant starts running straight out of the cradle, so working on easier examples first should not be seen as a waste of time, but as an investment of time. With this being said, dear friends, let us begin our journey to the land of Applied Category Theory.  
 
-\chapter{Lesson 1: Introduction to Category Theory}
+\chapter*{Lesson 1: Introduction to Category Theory}
 \textbf{Questions}\\
 \begin{enumerate}
 	\item What are the origins of Category Theory?
@@ -97,7 +97,118 @@ Functors allow us to travel from category to another.
 	\end{tabular}
 \end{center}
 
+\chapter*{Lesson 2: Linear Computations and Databases}
+\textbf{Questions}:\\
+\begin{enumerate}
+\item How can we think of linear computations in terms of category theory?
+\item How can we think of databses in terms of category theory?
+\end{enumerate}
 
+\section*{Linear Computations}
+Linear computations are widely used in almost all computational disciplines. Given a bunch of inputs $\{x_1,x_2,\ldots,x_n \}$ one of the easiest things anyone can do is to take a linear sum:
+\[
+c_1x_1 + c_2x_2 + \ldots + c_nx_n = \sum_{i=1}^n c_ix_i
+\]
+What makes above mapping so attractive? There are several reasons:
+\begin{enumerate}
+	\item It can be quickly computed, more preciely in $O(n)$ time.
+	\item It is easily predictable in a sense that if $x_1$ goes us by $1$, the above value changes by $c_1$.
+	\item It is relatively easy to solve system of linear equations, with the upper bound of $O(n^3)$ time needed.
+\end{enumerate}
+Let us write a simple computer program which computes the above linear sum:
+\begin{verbatim}
+sum = 0
+for i from 1 to n {
+	sum = sum + c_i*x_i
+}
+\end{verbatim}
+Now let us try to convert the idea of translating a linear map into computer program using the langauge of category theory. In the process of doing so, we are going to learn about two categories, a category of matrices, \textbf{Mat}, and a category of programs, \textbf{Prog}.
+
+\subsection*{Matrices}
+The objects of this category are natural numbers. A morphism between objects $m$ and $n$ is an $(m,n)$ matrix consisting of rational numbers (in principle we could work with any field). So if $m=2$ and $n=3$, then one of the morphisms between $m$ and $n$ could be 
+\[
+\begin{bmatrix}
+3 & 0 & \frac{1}{2}\\
+4 & -1 & 1
+\end{bmatrix}
+\]
+
+\subsection*{Programs}
+The objects of this category are data types, such as a boolean type (\textbf{Bool}), an integer type (\textbf{Int}) and a rational number type (\textbf{Rat}). A morphism between types $x$ and $y$ is a program with an input type of $x$ and an output type of $y$. For instance, if we recall the program for computing a linear sum, then its input type is $(\text{\textbf{Rat}})^n$ and its output type is \textbf{Rat}, where we assume that the given program works with only rational numbers (besides, one can't store irrational numbers on a computer).
+
+\subsection*{Connection}
+Having introduced the above two categories, we can now attempt to construct a functor between them. To do so, it is necessary for us to describe 
+\begin{enumerate}
+	\item A map between objects of \textbf{Mat} and \textbf{Prog}.
+	\item A map between morphisms of \textbf{Mat} and \textbf{Prog}.
+\end{enumerate}
+so that compositions and identities are preserved. Let us set up a following functor $F:Mat \to Prog$.
+\begin{enumerate}
+	\item $F(n) = (Rat)^n$, i.e. a number $n$ is mapped into a type of rational $n$-tuples.
+	\item Given a $(m,n)$ matrix $M$, $F(M)$ corresponds to a program realizing a matrix multplication by $M$, i.e. $x\to xM$, where $x\in (Rat)^n$.
+\end{enumerate}
+
+\section*{Databases}
+Let's consider music listening patterns of people. Artists produce songs and people listen to these songs. Some music lovers have their favourite songs. How could we encode this simple fact? One way to encode this idea is to use database scheme, in our case, a scheme (or pattern) of how artists, songs and music lovers relate to each other. Let us construct a blueprint for the database tables. First we consider the tables corresponding to songs. 
+\begin{center}
+\begin{tabular}{|c||c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Songs}\\
+\hline
+Id & Title & Artist & Album\\
+\hline
+1 & Sweet Dreams & Beyonce & I Am... Sasha Fierce\\
+2 & Hot n Cold & Katy Perry & One of the Boys\\
+3 & Poker Face & Lady Gaga & The Fame\\
+\hline
+\end{tabular}
+\end{center}
+The second table provides information about music lovers.
+\begin{center}
+\begin{tabular}{|c||c|c|}
+\hline
+\multicolumn{3}{|c|}{Music Lovers}\\
+\hline
+Id & Name & Favorite Song\\
+\hline
+1 & Adam Bronx & Hot n Cold\\
+2 & Amanda Hills & Sweet Dreams\\
+3 & Jacquelin Smith & Poker Face\\
+4 & Elizabeth Taylor & Sweet Dreams\\
+\hline
+\end{tabular}
+\end{center}
+The final table is devoted to artists.
+\begin{center}
+\begin{tabular}{|c||c|c|}
+\hline
+\multicolumn{3}{|c|}{Artists}\\
+\hline
+Id & Name & Style\\
+\hline
+1 & Beyonce & Pop\\
+2 & Katy Pery & Pop\\
+3 & Lady Gaga & Pop\\
+\hline
+\end{tabular}
+\end{center}
+Based on this blueprint, we could visualize relationships between above entities as the following graph.
+\[
+\begin{tikzcd}[column sep = huge, row sep = huge]
+\text{Music Lover} \arrow[r, "\text{Favorite Song}"] \arrow[rd, "\text{Id}"] &
+\text{Song} \arrow[r, "\text{Performed By}"] \arrow[d, "\text{Id}"] &
+\text{Artist} \arrow[ld, "\text{Id}"] \\
+& \text{Integer} &
+\end{tikzcd}
+\]
+\subsection*{Database Instances}
+We have learnt that it is possible to represent relationships between database entities as a graph. By morphing arrows and extending identity arrows in such a graph, it can be transformed into a category, let's call it \emph{database scheme category}. If it is so, then how could we represent instances of the given database? A possible way to represent instances of the given database is to construct a functor between the database scheme category and \textbf{Set}, the category of sets. In case of the presented example, the functor, $F$, maps the objects as follows
+\begin{itemize}
+	\item $F(\text{Artist})=\{\text{Beyonce, Katy Perry, Lady Gaga}\}$.
+	\item $F(\text{Song}) = \{\text{Sweet Dreams, Hot n Cold, Poker Face} \}$.
+	\item $F(\text{Music Lover}) = \{\text{Adam Bronx, Amanda Hills, Jacquelin Smith, Elizabeth Taylor} \}$.
+	\item $F(\text{Integer}) = \{1,2,3 \}$.
+\end{itemize} 
 \begin{thebibliography}{9}
 
 \bibitem{Landry05}

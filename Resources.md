@@ -20,5 +20,13 @@ The field of applied category theory is based on category theory, so any success
 </ol>
 
 <h4>Notes</h4>
+<ol>
 <li><a href="http://math.mit.edu/~dspivak/Lausanne2015-minicourse.pdf">Notes on Applied Category Theory: Information Structures and Modular Systems - David Spivak</a></li>
 <li><a href="https://arxiv.org/pdf/1809.05923.pdf">What is Applied Category Theory? - Tai-Danae Bradley</a></li>
+</ol>
+
+<h3>Operad Theory</h3>
+<h4>Notes</h4>
+<ol>
+<li><a href="https://alistairsavage.ca/pubs/Samchuck-Schnarch-Operads.pdf">An Introduction to Operad Theory</a></li>
+</ol>
